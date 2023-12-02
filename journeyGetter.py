@@ -2,7 +2,7 @@ import requests
 import pandas as pd
 
 
-API_URL = "https://journey-service-int.api.sbb.ch"
+API_URL_ROAD = "https://journey-service-int.api.sbb.ch"
 CLIENT_SECRET = "MU48Q~IuD6Iawz3QfvkmMiKHtfXBf-ffKoKTJdt5"
 CLIENT_ID = "f132a280-1571-4137-86d7-201641098ce8"
 SCOPE = "c11fa6b1-edab-4554-a43d-8ab71b016325/.default"
