@@ -8,6 +8,7 @@ ID = None
 format = "png"
 
 response = requests.get(f"{API_URL}?api_key={API_KEY}")
+response["platform_nr"]
 
  
 # Writing to sample.json
