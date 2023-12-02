@@ -1,0 +1,705 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "description" : "<b>Journey Maps Tiles</b> (de:Karten für SBB Kundeninformation).\nFor <b>internal SBB consumers</b> and <b>approved contractors</b> only.\nProvided by: DSO-KIS \nAPI definition based on TileServer GL documentation : https://tileserver.readthedocs.io/en/latest/endpoints.html \n\n<b>URL for vector maps : https://journey-maps-tiles.geocdn.sbb.ch/styles/base_bright_v2/style.json?api_key=<your-api-key></b>\nURL for raster maps : https://journey-maps-tiles.geocdn.sbb.ch/styles/base_bright_v2/{z}/{x}/{y}.webp?api_key=<your-api-key>",
+    "version" : "1.36.0",
+    "title" : "Journey-Maps-tiles (J-M-t) API",
+    "termsOfService" : "https://confluence.sbb.ch/pages/viewpage.action?pageId=834715001",
+    "contact" : {
+      "name" : "J-M-t",
+      "url" : "https://confluence.sbb.ch/pages/viewpage.action?pageId=834715001",
+      "email" : "rokas@sbb.ch"
+    },
+    "license" : {
+      "name" : "License: SBB CFF FFS",
+      "url" : "https://www.sbb.ch/de/meta/legallines/rechtlicher-hinweis.html"
+    }
+  },
+  "host" : "journey-maps-tiles.api.sbb.ch",
+  "basePath" : "/",
+  "tags" : [ {
+    "name" : "Styles",
+    "description" : ""
+  }, {
+    "name" : "Data",
+    "description" : ""
+  } ],
+  "securityDefinitions" : {
+    "ApiKeyAuth" : {
+      "type" : "apiKey",
+      "in" : "query",
+      "name" : "api_key"
+    }
+  },
+  "paths" : {
+    "/styles.json" : {
+      "get" : {
+        "tags" : [ "Styles" ],
+        "summary" : "list of all style definition files",
+        "description" : "A list of all style definition files.",
+        "operationId" : "get_styles",
+        "produces" : [ "application/json" ],
+        "security" : [ {
+          "ApiKeyAuth" : [ ]
+        } ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "Successful operation",
+            "schema" : {
+              "type" : "string"
+            }
+          },
+          "400" : {
+            "description" : "Bad request",
+            "schema" : {
+              "$ref" : "#/definitions/Error"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "description" : "Forbidden"
+          },
+          "404" : {
+            "description" : "Not Found"
+          },
+          "406" : {
+            "description" : "Accept must be 'application/json'",
+            "schema" : {
+              "$ref" : "#/definitions/Error"
+            }
+          },
+          "500" : {
+            "description" : "Internal server error",
+            "schema" : {
+              "$ref" : "#/definitions/Error"
+            }
+          },
+          "503" : {
+            "description" : "Service Unavailable",
+            "schema" : {
+              "$ref" : "#/definitions/Error"
+            }
+          }
+        },
+        "deprecated" : false
+      }
+    },
+    "/styles/{id}/style.json" : {
+      "get" : {
+        "tags" : [ "Styles" ],
+        "summary" : "style definition file",
+        "description" : "A style definition file is a document that defines the visual appearance of a map: what data to draw, the order to draw it in, and how to style the data when drawing it. A style document is a JSON object with specific root level and nested properties. This specification defines and describes these properties. See : https://docs.mapbox.com/mapbox-gl-js/style-spec/",
+        "operationId" : "get_style",
+        "produces" : [ "application/json" ],
+        "security" : [ {
+          "ApiKeyAuth" : [ ]
+        } ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "Style definition id.",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Successful operation",
+            "schema" : {
+              "type" : "string"
+            }
+          },
+          "400" : {
+            "description" : "Bad request",
+            "schema" : {
+              "$ref" : "#/definitions/Error"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "description" : "Forbidden"
+          },
+          "404" : {
+            "description" : "Not Found"
+          },
+          "406" : {
+            "description" : "Accept must be 'application/json'",
+            "schema" : {
+              "$ref" : "#/definitions/Error"
+            }
+          },
+          "500" : {
+            "description" : "Internal server error",
+            "schema" : {
+              "$ref" : "#/definitions/Error"
+            }
+          },
+          "503" : {
+            "description" : "Service Unavailable",
+            "schema" : {
+              "$ref" : "#/definitions/Error"
+            }
+          }
+        },
+        "deprecated" : false
+      }
+    },
+    "/styles/{id}/{z}/{x}/{y}.{format}" : {
+      "get" : {
+        "tags" : [ "Styles" ],
+        "summary" : "rendered raster tiles",
+        "description" : "A rendered raster tile is a server side computed part of the map delivered as an image.",
+        "operationId" : "get_rasters",
+        "produces" : [ "image/png", "image/jpeg", "image/webp" ],
+        "security" : [ {
+          "ApiKeyAuth" : [ ]
+        } ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "Style id.",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "x",
+          "in" : "path",
+          "description" : "X position",
+          "required" : true,
+          "type" : "integer"
+        }, {
+          "name" : "y",
+          "in" : "path",
+          "description" : "Y position",
+          "required" : true,
+          "type" : "integer"
+        }, {
+          "name" : "z",
+          "in" : "path",
+          "description" : "Z position",
+          "required" : true,
+          "type" : "integer"
+        }, {
+          "name" : "format",
+          "in" : "path",
+          "description" : "Format usually png, jpg or webp",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Successful operation",
+            "schema" : {
+              "type" : "string"
+            }
+          },
+          "400" : {
+            "description" : "Bad request",
+            "schema" : {
+              "$ref" : "#/definitions/Error"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "description" : "Forbidden"
+          },
+          "404" : {
+            "description" : "Not Found"
+          },
+          "406" : {
+            "description" : "Accept must be 'application/json'",
+            "schema" : {
+              "$ref" : "#/definitions/Error"
+            }
+          },
+          "500" : {
+            "description" : "Internal server error",
+            "schema" : {
+              "$ref" : "#/definitions/Error"
+            }
+          },
+          "503" : {
+            "description" : "Service Unavailable",
+            "schema" : {
+              "$ref" : "#/definitions/Error"
+            }
+          }
+        },
+        "deprecated" : false
+      }
+    },
+    "/styles/{id}/sprite.{format}" : {
+      "get" : {
+        "tags" : [ "Styles" ],
+        "summary" : "style graphic resource",
+        "description" : "A sprite is an image bundle used by the style definition file.",
+        "operationId" : "get_sprite",
+        "produces" : [ "application/json", "image/png" ],
+        "security" : [ {
+          "ApiKeyAuth" : [ ]
+        } ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "Style definition id.",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "format",
+          "in" : "path",
+          "description" : "Sprite format can be one of : png, jpg, jpeg, webp.",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Successful operation",
+            "schema" : {
+              "type" : "string"
+            }
+          },
+          "400" : {
+            "description" : "Bad request",
+            "schema" : {
+              "$ref" : "#/definitions/Error"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "description" : "Forbidden"
+          },
+          "404" : {
+            "description" : "Not Found"
+          },
+          "406" : {
+            "description" : "Accept must be 'application/json'",
+            "schema" : {
+              "$ref" : "#/definitions/Error"
+            }
+          },
+          "500" : {
+            "description" : "Internal server error",
+            "schema" : {
+              "$ref" : "#/definitions/Error"
+            }
+          },
+          "503" : {
+            "description" : "Service Unavailable",
+            "schema" : {
+              "$ref" : "#/definitions/Error"
+            }
+          }
+        },
+        "deprecated" : false
+      }
+    },
+    "/styles/{id}/sprite{resolution}.{format}" : {
+      "get" : {
+        "tags" : [ "Styles" ],
+        "summary" : "style graphic resource",
+        "description" : "A sprite is an image bundle used by the style definition file.",
+        "operationId" : "get_sprite_rez",
+        "produces" : [ "application/json", "image/png" ],
+        "security" : [ {
+          "ApiKeyAuth" : [ ]
+        } ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "Style definition id.",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "format",
+          "in" : "path",
+          "description" : "Sprite format can be one of : png, jpg, jpeg, webp.",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "resolution",
+          "in" : "path",
+          "description" : "Sprite resolution can be one of : @2x, @3x, @4x.",
+          "required" : true,
+          "type" : "string",
+          "enum" : [ "@2x", "@3x", "@4x" ]
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Successful operation",
+            "schema" : {
+              "type" : "string"
+            }
+          },
+          "400" : {
+            "description" : "Bad request",
+            "schema" : {
+              "$ref" : "#/definitions/Error"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "description" : "Forbidden"
+          },
+          "404" : {
+            "description" : "Not Found"
+          },
+          "406" : {
+            "description" : "Accept must be 'application/json'",
+            "schema" : {
+              "$ref" : "#/definitions/Error"
+            }
+          },
+          "500" : {
+            "description" : "Internal server error",
+            "schema" : {
+              "$ref" : "#/definitions/Error"
+            }
+          },
+          "503" : {
+            "description" : "Service Unavailable",
+            "schema" : {
+              "$ref" : "#/definitions/Error"
+            }
+          }
+        },
+        "deprecated" : false
+      }
+    },
+    "/styles/{id}/wmts.xml" : {
+      "get" : {
+        "tags" : [ "Styles" ],
+        "summary" : "style capabilities definition",
+        "description" : "An XML file describing the style capabilities.",
+        "operationId" : "get_wmts",
+        "produces" : [ "application/xml" ],
+        "security" : [ {
+          "ApiKeyAuth" : [ ]
+        } ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "Style definition id.",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Successful operation",
+            "schema" : {
+              "type" : "string"
+            }
+          },
+          "400" : {
+            "description" : "Bad request",
+            "schema" : {
+              "$ref" : "#/definitions/Error"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "description" : "Forbidden"
+          },
+          "404" : {
+            "description" : "Not Found"
+          },
+          "406" : {
+            "description" : "Accept must be 'application/json'",
+            "schema" : {
+              "$ref" : "#/definitions/Error"
+            }
+          },
+          "500" : {
+            "description" : "Internal server error",
+            "schema" : {
+              "$ref" : "#/definitions/Error"
+            }
+          },
+          "503" : {
+            "description" : "Service Unavailable",
+            "schema" : {
+              "$ref" : "#/definitions/Error"
+            }
+          }
+        },
+        "deprecated" : false
+      }
+    },
+    "/fonts/{fontstack}/{start}-{end}.pbf" : {
+      "get" : {
+        "tags" : [ "Styles" ],
+        "summary" : "style font resource",
+        "description" : "Fonts defined and used by the style definition file.",
+        "operationId" : "get_font",
+        "produces" : [ "application/x-protobuf" ],
+        "security" : [ {
+          "ApiKeyAuth" : [ ]
+        } ],
+        "parameters" : [ {
+          "name" : "fontstack",
+          "in" : "path",
+          "description" : "Font name as defined in the stryle definition file.",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "start",
+          "in" : "path",
+          "description" : "Start of the glyphs range.",
+          "required" : true,
+          "type" : "integer"
+        }, {
+          "name" : "end",
+          "in" : "path",
+          "description" : "Ends of the glyphs range.",
+          "required" : true,
+          "type" : "integer"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Successful operation",
+            "schema" : {
+              "type" : "string"
+            }
+          },
+          "400" : {
+            "description" : "Bad request",
+            "schema" : {
+              "$ref" : "#/definitions/Error"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "description" : "Forbidden"
+          },
+          "404" : {
+            "description" : "Not Found"
+          },
+          "406" : {
+            "description" : "Accept must be 'application/json'",
+            "schema" : {
+              "$ref" : "#/definitions/Error"
+            }
+          },
+          "500" : {
+            "description" : "Internal server error",
+            "schema" : {
+              "$ref" : "#/definitions/Error"
+            }
+          },
+          "503" : {
+            "description" : "Service Unavailable",
+            "schema" : {
+              "$ref" : "#/definitions/Error"
+            }
+          }
+        },
+        "deprecated" : false
+      }
+    },
+    "/data/{mbtiles}.json" : {
+      "get" : {
+        "tags" : [ "Data" ],
+        "summary" : "style data resource",
+        "description" : "Data sources used by the style definition file.",
+        "operationId" : "get_mbtiles_json",
+        "produces" : [ "application/json" ],
+        "security" : [ {
+          "ApiKeyAuth" : [ ]
+        } ],
+        "parameters" : [ {
+          "name" : "mbtiles",
+          "in" : "path",
+          "description" : "MB tile name",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Successful operation",
+            "schema" : {
+              "type" : "string"
+            }
+          },
+          "400" : {
+            "description" : "Bad request",
+            "schema" : {
+              "$ref" : "#/definitions/Error"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "description" : "Forbidden"
+          },
+          "404" : {
+            "description" : "Not Found"
+          },
+          "406" : {
+            "description" : "Accept must be 'application/json'",
+            "schema" : {
+              "$ref" : "#/definitions/Error"
+            }
+          },
+          "500" : {
+            "description" : "Internal server error",
+            "schema" : {
+              "$ref" : "#/definitions/Error"
+            }
+          },
+          "503" : {
+            "description" : "Service Unavailable",
+            "schema" : {
+              "$ref" : "#/definitions/Error"
+            }
+          }
+        },
+        "deprecated" : false
+      }
+    },
+    "/data/{mbtiles}/{z}/{x}/{y}.{format}" : {
+      "get" : {
+        "tags" : [ "Data" ],
+        "summary" : "style data resource",
+        "description" : "Data sources used by the style definition file.",
+        "operationId" : "get_mbtiles",
+        "produces" : [ "application/x-protobuf", "image/png", "image/jpeg" ],
+        "security" : [ {
+          "ApiKeyAuth" : [ ]
+        } ],
+        "parameters" : [ {
+          "name" : "mbtiles",
+          "in" : "path",
+          "description" : "MB tile name",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "x",
+          "in" : "path",
+          "description" : "X position",
+          "required" : true,
+          "type" : "integer"
+        }, {
+          "name" : "y",
+          "in" : "path",
+          "description" : "Y position",
+          "required" : true,
+          "type" : "integer"
+        }, {
+          "name" : "z",
+          "in" : "path",
+          "description" : "Z position",
+          "required" : true,
+          "type" : "integer"
+        }, {
+          "name" : "format",
+          "in" : "path",
+          "description" : "Format usually png, jpg or pbf",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Successful operation",
+            "schema" : {
+              "type" : "string"
+            }
+          },
+          "400" : {
+            "description" : "Bad request",
+            "schema" : {
+              "$ref" : "#/definitions/Error"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "description" : "Forbidden"
+          },
+          "404" : {
+            "description" : "Not Found"
+          },
+          "406" : {
+            "description" : "Accept must be 'application/json'",
+            "schema" : {
+              "$ref" : "#/definitions/Error"
+            }
+          },
+          "500" : {
+            "description" : "Internal server error",
+            "schema" : {
+              "$ref" : "#/definitions/Error"
+            }
+          },
+          "503" : {
+            "description" : "Service Unavailable",
+            "schema" : {
+              "$ref" : "#/definitions/Error"
+            }
+          }
+        },
+        "deprecated" : false
+      }
+    },
+    "/health" : {
+      "get" : {
+        "tags" : [ "Health" ],
+        "summary" : "service health check",
+        "description" : "Give a 200 Ok if the service is running, else 503 Starting.",
+        "operationId" : "get_health",
+        "produces" : [ "application/json" ],
+        "security" : [ {
+          "ApiKeyAuth" : [ ]
+        } ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "Service Ok",
+            "schema" : {
+              "type" : "string"
+            }
+          },
+          "503" : {
+            "description" : "Service Starting",
+            "schema" : {
+              "$ref" : "#/definitions/Error"
+            }
+          }
+        },
+        "deprecated" : false
+      }
+    }
+  },
+  "definitions" : {
+    "Error" : {
+      "type" : "object",
+      "required" : [ "message", "status" ],
+      "properties" : {
+        "message" : {
+          "type" : "string",
+          "description" : "A short, human-readable summary of the problem type"
+        },
+        "status" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "Http status code of the error (4xx/5xx) problem."
+        }
+      },
+      "title" : "Error",
+      "description" : "Error detail to be returned if 4xx/5xx, according to [RFC-7807](https://tools.ietf.org/html/rfc7807)"
+    }
+  }
+}
