@@ -39,11 +39,19 @@ def use_token(origin, destination, date, time):
 
 best_destinations = []
 
+def hour_to_min(travel):
+    duration = travel['duration']
+    parts = duration[2:].split('H')
+    if len(parts) == 1:
+        hours = 0
+        minutes = int(parts[0][:-1])
+    else:
+        hours = int(parts[0])
+        minutes = int(parts[1][:-1])
+    return hours * 60 + minutes
+
 for i in range(len(use_token("8503000", "8507000", "2023-04-18", "13:07")['trips'])):
     best_destinations.append(use_token("8503000", "8507000", "2023-04-18", "13:07")['trips'][i])
-    print(use_token("8503000", "8507000", "2023-04-18", "13:07")['trips'][i]["duration"])
-    print(len(use_token("8503000", "8507000", "2023-04-18", "13:07")['trips'][i]["legs"]))
-
 
 
 def heuristic(dest_list: list):
@@ -58,13 +66,6 @@ def heuristic(dest_list: list):
     print('heuristic points: ',best_train[1], "time:" ,hour_to_min(best_train[0]), "Transfers: ", len(best_train[0]['legs']))
     return best_train[0]
         
-
-def hour_to_min(travel):
-    duration = travel['duration']
-    parts = duration[2:].split('H')
-    hours = int(parts[0]) if len(parts) > 1 else 0
-    minutes = int(parts[1][:-1]) if len(parts) > 1 else 0
-    return hours * 60 + minutes
     
 
 heuristic(best_destinations)
