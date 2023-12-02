@@ -24,4 +24,4 @@ def use_token():
     }
     # Include the header (and additional ones if needed in your request
 
-print(get_token())
+print(get_token().text)
