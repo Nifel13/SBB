@@ -1,4 +1,6 @@
 import requests
+import pandas as pd
+from tabulate import tabulate
 
 API_URL = "https://journey-service-int.api.sbb.ch"
 CLIENT_SECRET = "MU48Q~IuD6Iawz3QfvkmMiKHtfXBf-ffKoKTJdt5"
@@ -24,7 +26,18 @@ def use_token():
         'Accept-Language': 'en',
         'Content-Type': 'application/json'
     }
-    # Include the header (and additional ones if needed in your request
-    return requests.post("https://journey-service-int.api.sbb.ch/v3/trips/by-origin-destination", headers=headers, json={   "origin": "8503000",   "destination": "8507000",   "date": "2023-04-18",   "time": "13:07",   "mobilityFilter": {     "walkSpeed": 50,   },   "includeAccessibility": "ALL", }).json()
+
+    response = requests.post("https://journey-service-int.api.sbb.ch/v3/trips/by-origin-destination", headers=headers, json={
+        "origin": "8503000",
+        "destination": "8507000",
+        "date": "2023-04-18",
+        "time": "13:07",
+        "mobilityFilter": {
+            "walkSpeed": 50,
+        },
+        "includeAccessibility": "ALL",
+    }).json()
+
+    return response
 
 print(use_token())
