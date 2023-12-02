@@ -36,7 +36,12 @@ def use_token(origin, destination, date, time):
 
     return response
 
-print(use_token("8503000", "8507000", "2023-04-18", "13:07"))
 
+best_destinations = []
+
+for i in range(len(use_token("8503000", "8507000", "2023-04-18", "13:07")['trips'])):
+    best_destinations.append(use_token("8503000", "8507000", "2023-04-18", "13:07")['trips'][i]['duration'])
+
+print(best_destinations)
 
 
