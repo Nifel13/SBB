@@ -18,7 +18,7 @@ def get_token():
     return requests.post('https://login.microsoftonline.com/2cda5d11-f0ac-46b3-967d-af1b2e1bd01a/oauth2/v2.0/token',
                          data=params).json()
 
-def use_token():
+def use_token(origin, destination, date, time):
     auth = get_token()['access_token']
     headers = {
         'Authorization': f"Bearer {auth}",
@@ -28,16 +28,15 @@ def use_token():
     }
 
     response = requests.post("https://journey-service-int.api.sbb.ch/v3/trips/by-origin-destination", headers=headers, json={
-        "origin": "8503000",
-        "destination": "8507000",
-        "date": "2023-04-18",
-        "time": "13:07",
-        "mobilityFilter": {
-            "walkSpeed": 50,
-        },
-        "includeAccessibility": "ALL",
+        "origin": origin,
+        "destination": destination,
+        "date": date,
+        "time": time,
     }).json()
 
     return response
 
-print(use_token())
+print(use_token("8503000", "8507000", "2023-04-18", "13:07"))
+
+
+
