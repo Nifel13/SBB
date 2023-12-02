@@ -19,10 +19,19 @@ def get_token():
 
 def use_token():
     headers = {
-        'Authorization': f"Bearer {get_token()['access_token']}"
+        'Authorization': f"Bearer {get_token()['access_token']}",
+        'accept': 'application/json',
+        'Accept-Language': 'en',
+        'Content-Type': 'application/json'
     }
     # Include the header (and additional ones if needed in your request
-print(get_token())
+    return requests.post(API_URL, headers=headers, json={"origin": "8503000"}).json()
+
+
+
+def requestJson():
+    return 
+
 print(use_token())
 
 
