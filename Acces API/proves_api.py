@@ -15,13 +15,15 @@ def get_token():
         'client_id': CLIENT_ID,
         'client_secret': CLIENT_SECRET
     }
-    return requests.post('https://login.microsoftonline.com/2cda5d11-f0ac-46b3-967d-af1b2e1bd01a/oauth2/v2.0/token',
-                         data=params).json()
+    return requests.post('https://login.microsoftonline.com/2cda5d11-f0ac-46b3-967d-af1b2e1bd01a/oauth2/v2.0/token', data=params).json()
 
 def use_token():
     headers = {
         'Authorization': f"Bearer {get_token()['access_token']}"
     }
     # Include the header (and additional ones if needed in your request
-
 print(get_token())
+print(use_token())
+
+
+
