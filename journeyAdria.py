@@ -55,15 +55,17 @@ class Journey:
         date = datetime.now()
         self.start = start
         self.end = end
-        self.day = str(date.year) + "-" + str(date.month) + "-" + str(date.day)
+        formatted_date = date.strftime("%Y-%m-%d")
+        self.day = formatted_date
         self.hour = str(datetime.now().hour) + ":" + str(datetime.now().minute)
         self.best_destinations = []
         for i in range(len(use_token(self.start, self.end, "2023-04-18", "13:07")['trips'])):
             self.best_destinations.append(use_token(self.start, self.end, "2023-04-18", "13:07")['trips'][i])
+            
 
     
 
-    def heuristic(self):
+    def heurizztic(self):
         best_train = [None,999999999]
         for viatge in self.best_destinations:
             puntuacio = 0
@@ -79,11 +81,5 @@ class Journey:
 
 
 bubuselo = Journey("8503000","8507000")
-bubuselo.heuristic()
+bubuselo.heurizztic()
 
-
-"""date = datetime.now()
-day = str(date.year) + "-" + str(date.month) + "-" + str(date.day)
-hour = str(datetime.now().hour) + ":" + str(datetime.now().minute)
-len(use_token("8503000", "8507000", "2023-04-18", "13:07")['trips'])
-print(day,hour)"""
