@@ -1,4 +1,6 @@
+import json
 import requests
+
 
 API_URL = "https://journey-service-int.api.sbb.ch"
 CLIENT_SECRET = "MU48Q~IuD6Iawz3QfvkmMiKHtfXBf-ffKoKTJdt5"
@@ -13,18 +15,24 @@ def get_token():
         'client_id': CLIENT_ID,
         'client_secret': CLIENT_SECRET
     }
-    return requests.post('https://login.microsoftonline.com/2cda5d11-f0ac-46b3-967d-af1b2e1bd01a/oauth2/v2.0/token',
-                         data=params).json()
+    return requests.post('https://login.microsoftonline.com/2cda5d11-f0ac-46b3-967d-af1b2e1bd01a/oauth2/v2.0/token', data=params).json()
 
 def use_token():
-    auth = get_token()['access_token']
     headers = {
-        'Authorization': f"Bearer {auth}",
+        'Authorization': f"Bearer {get_token()['access_token']}",
         'accept': 'application/json',
         'Accept-Language': 'en',
         'Content-Type': 'application/json'
     }
     # Include the header (and additional ones if needed in your request
-    return requests.post("https://journey-service-int.api.sbb.ch/v3/trips/by-origin-destination", headers=headers, json={   "origin": "8503000",   "destination": "8507000",   "date": "2023-04-18",   "time": "13:07",   "mobilityFilter": {     "walkSpeed": 50,   },   "includeAccessibility": "ALL", }).json()
+    return requests.post(API_URL, headers=headers, json={"origin": "8503000"}).json()
+
+
+
+def requestJson():
+    return 
 
 print(use_token())
+
+
+
