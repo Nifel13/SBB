@@ -43,6 +43,7 @@ def getCarTrayectGeom(origin,destination):
     with open("traject.json", "w") as outfile:
         json.dump(response,outfile)    
     
+    
     return response
 
 
