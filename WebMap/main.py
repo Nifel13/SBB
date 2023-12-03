@@ -2,9 +2,9 @@ from API_Request import getStation
 from flask import Flask, render_template, request, redirect, json
 from API_Request import getCarTrayectGeom, adress_to_coordinates
 from Point import Point
+from journeyAdria import findJourney
 
 app = Flask(__name__)
-
 
 
 @app.route("/map", methods=["POST"])
@@ -15,19 +15,25 @@ def calculTrajecte():
         else:
         
             try:
-                origin=Point(adress_to_coordinates(request.form['origin']))
-                destination=Point(adress_to_coordinates(request.form['destination']))
+                origin=adress_to_coordinates(request.form['origin'])
+                destination=adress_to_coordinates(request.form['destination'])
             except:
                 return redirect("/", code=2)
-            jsonTraject = getCarTrayectGeom(origin, destination)
-            return render_template("map.html", dataStruct=[adress_to_coordinates(request.form['origin']), adress_to_coordinates(request.form['destination']), jsonTraject, request.form['origin'], request.form['destination']])
+            megalista = findJourney(origin, destination)
+            listaCoords = megalista[0]
+            tiempototal = megalista[1]
+            listaCoords[1][0], listaCoords[1][1] = listaCoords[1][1], listaCoords[1][0]
+            listaCoords[4][0], listaCoords[4][1] = listaCoords[4][1], listaCoords[4][0]
+
+
+            return render_template("map.html", dataStruct=[adress_to_coordinates(request.form['origin']), adress_to_coordinates(request.form['destination']), listaCoords, request.form['origin'], request.form['destination']])
     else:
         return redirect("/", code=1)
 
 
 @app.route("/")
 def index_init():
-    return render_template("index.html", bitch_var="Yes BITCHHH")
+    return render_template("index.html")
 '''
 def carTrayectWeb(A,B):
     jsonTraject = getCarTrayectGeom(A,B)
@@ -37,6 +43,6 @@ def carTrayectWeb(A,B):
 
 
 if __name__ == "__main__":
-    app.run(host="127.0.0.1", port=8008, debug=True)
+    app.run(host="127.0.0.1", port=8009, debug=True)
 
 

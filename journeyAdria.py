@@ -189,4 +189,4 @@ if __name__ == '__main__':
     walk2 = Walk(coords_place_b, B)
 
     results = Journey(car, walk1, train, walk2)
-    print(results.coord_list())
+    print(results.total_time())

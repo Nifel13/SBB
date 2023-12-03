@@ -13,7 +13,7 @@
     </style>
   </head>
   <body>
-    <p> {{dataStruct[2][4]}}</p>
+    <p> {{dataStruct[2]}}</p>
     <div id = "map"></div>
 
     <script>
@@ -31,20 +31,30 @@
 
       var origin = ['{{dataStruct[0][0]}}', '{{dataStruct[0][1]}}'];
       var destino = ['{{dataStruct[1][0]}}', '{{dataStruct[1][1]}}'];
-      var jsonGeom = ['{{dataStruct[2]|tojson}}'];
+      var lista_coords = ['{{dataStruct[2][0]}}'];
       var inputor ='{{dataStruct[3]}}';
       var inputdest = '{{dataStruct[4]}}';
 
 
     
 
-      var destinationMarker = L.marker(destino).addTo(map);
-      destinationMarker.bindPopup(`<b>${inputdest}</b><br>Coordinates: ${destino[0]}, ${destino[1]}`).openPopup();
+      //var destinationMarker = L.marker(lista_coords[0]).addTo(map);
+      //destinationMarker.bindPopup(`<b>${inputdest}</b><br>Coordinates: ${lista_coords[0][0]}, ${lista_coords[0][1]}`).openPopup();
 
-      var originMarker = L.marker(origin).addTo(map);
-      originMarker.bindPopup(`<b>${inputor}</b><br>Coordinates: ${origin[0]}, ${origin[1]}`).openPopup();
-        
+      var originMarker = L.marker(lista_coords[1]).addTo(map);
+      originMarker.bindPopup(`<b>${inputor}</b><br>Coordinates: ${lista_coords[1][0]}, ${lista_coords[1][1]}`).openPopup();
+
+      var originMarker = L.marker(lista_coords[2]).addTo(map);
+      originMarker.bindPopup(`<b>${inputor}</b><br>Coordinates: ${lista_coords[2][0]}, ${lista_coords[2][1]}`).openPopup();
       
+      //var originMarker = L.marker(lista_coords[3]).addTo(map);
+      //originMarker.bindPopup(`<b>${inputor}</b><br>Coordinates: ${lista_coords[3][0]}, ${lista_coords[3][1]}`).openPopup();
+
+      var originMarker = L.marker(lista_coords[4]).addTo(map);
+      originMarker.bindPopup(`<b>${inputor}</b><br>Coordinates: ${lista_coords[4][0]}, ${lista_coords[4][1]}`).openPopup();
+
+      var originMarker = L.marker(lista_coords[5]).addTo(map);
+      originMarker.bindPopup(`<b>${inputor}</b><br>Coordinates: ${lista_coords[5][0]}, ${lista_coords[5][1]}`).openPopup();
       
       //INTENTO DE SITUAR GEO_JSON:
       function trajectPlot(){
@@ -66,7 +76,7 @@
           }
       }
 
-      trajectPlot();
+
 
 
       L.geoJSON(jsonGeom).addTo(map);
