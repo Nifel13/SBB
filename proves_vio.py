@@ -18,7 +18,7 @@ def get_token():
                          data=params).json()
 
 # Longitude and latitude with 4 decimals (both are strings)
-def use_token(longitude, latitude):
+def use_token_places(longitude, latitude):
     auth = get_token()['access_token']
     headers = {
         'Authorization': f"Bearer {auth}",
@@ -31,19 +31,41 @@ def use_token(longitude, latitude):
         "longitude": longitude,
         "latitude": latitude,
     }).json()
-
     return response
 
-
-test = use_token(8.5441, 47.4115)
-print(test["places"][0]["id"])
-
 def read_params_from_json():
-    with open('park_rail.json', 'r') as f:
+    with open('mobilitat.json', 'r') as f:
         params = json.load(f)
     return params
 
-params = read_params_from_json()
+def coords_parkrail(place, params):
+    for i in range(len(params)):
+        if str(params[i]['bpuic']) == place['places'][0]['id']:
+            return params[i]['geopos']['lon'], params[i]['geopos']['lat']
 
-for i in range(params['total_count']):
-    pass
+'''if __name__ == '__main__':
+    longitude = 8.5441
+    latitude = 47.4115
+    place = use_token_places(longitude, latitude)
+    coords_place = place['places'][0]['centroid']['coordinates']
+    params = read_params_from_json()
+    coords_parktrail = coords_parkrail(place, params)
+    print(coords_parktrail)'''
+
+if __name__ == '__main__':
+    A = [8.544152, 47.411525]
+    B = A
+    longitude_a, latitude_a = A
+    longitude_b, latitude_b = B
+
+    place_a = use_token_places(longitude_a, latitude_a)
+    id_place_a = place_a['places'][0]['id']
+    coords_place_a = place_a['places'][0]['centroid']['coordinates']
+    params = read_params_from_json()
+    coords_pr = coords_parkrail(place_a, params)
+
+    place_b = use_token_places(longitude_b, latitude_b)
+    id_place_b = place_b['places'][0]['id']
+    coords_place_b = place_b['places'][0]['centroid']['coordinates']
+
+
