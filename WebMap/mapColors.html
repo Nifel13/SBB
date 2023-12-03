@@ -40,7 +40,19 @@
 <p>Enter walk1 destination:</p>
 <input type="text" id="walk1Destination" placeholder="Enter walk1 destination (optional, default to car destination if not specified)">
 
-<!-- Add similar input fields for train and walk2 -->
+<p>Train:</p>
+<p>Enter train origin:</p>
+<input type="text" id="trainOrigin" placeholder="Enter train origin (optional, default to walk1 destination if not specified)">
+
+<p>Enter train destination:</p>
+<input type="text" id="trainDestination" placeholder="Enter train destination (optional, default to walk1 destination if not specified)">
+
+<p>Walk2:</p>
+<p>Enter walk2 origin:</p>
+<input type="text" id="walk2Origin" placeholder="Enter walk2 origin (optional, default to train destination if not specified)">
+
+<p>Enter walk2 destination:</p>
+<input type="text" id="walk2Destination" placeholder="Enter walk2 destination (optional, default to train destination if not specified)">
 
 <button onclick="showMap()">Show Map</button>
 
@@ -57,12 +69,17 @@
         var carDestination = document.getElementById('carDestination').value;
         var walk1Origin = document.getElementById('walk1Origin').value;
         var walk1Destination = document.getElementById('walk1Destination').value;
+        var trainOrigin = document.getElementById('trainOrigin').value;
+        var trainDestination = document.getElementById('trainDestination').value;
+        var walk2Origin = document.getElementById('walk2Origin').value;
+        var walk2Destination = document.getElementById('walk2Destination').value;
 
         // Create a list of tuples for each leg of the journey
         var listOfTuples = [
-            [getCoordinates(carOrigin), getCoordinates(carDestination)],
-            [getCoordinates(walk1Origin), getCoordinates(walk1Destination)],
-            // Add more tuples for train, walk2 as needed
+            [getCoordinates(carOrigin), getCoordinates(carDestination), 'red'],
+            [getCoordinates(walk1Origin), getCoordinates(walk1Destination), 'blue'],
+            [getCoordinates(trainOrigin), getCoordinates(trainDestination), 'green'],
+            [getCoordinates(walk2Origin), getCoordinates(walk2Destination), 'blue']
         ];
 
         // Filter out tuples with undefined origins or destinations
@@ -87,6 +104,7 @@
         for (var i = 0; i < filteredList.length; i++) {
             var origin = filteredList[i][0];
             var destination = filteredList[i][1];
+            var color = filteredList[i][2];
 
             var originMarker = L.marker(origin).addTo(map);
             originMarker.bindPopup(`<b>Leg ${i + 1} Origin</b><br>Coordinates: ${origin[0]}, ${origin[1]}`).openPopup();
@@ -94,8 +112,8 @@
             var destinationMarker = L.marker(destination).addTo(map);
             destinationMarker.bindPopup(`<b>Leg ${i + 1} Destination</b><br>Coordinates: ${destination[0]}, ${destination[1]}`).openPopup();
 
-            // Draw line for each leg of the journey
-            var line = L.polyline([origin, destination], { color: 'red' }).addTo(map);
+            // Draw line for each leg of the journey with a different color
+            var line = L.polyline([origin, destination], { color: color }).addTo(map);
         }
 
         // Add legend
@@ -105,7 +123,9 @@
     function addLegend() {
         var legend = document.getElementById('legend');
         legend.innerHTML = '<h3>Legend</h3>';
-        legend.innerHTML += '<div><span style="color: red;">Journey</span></div>';
+        legend.innerHTML += '<div><span style="color: red;">Car</span></div>';
+        legend.innerHTML += '<div><span style="color: blue;">Walk</span></div>';
+        legend.innerHTML += '<div><span style="color: green;">Train</span></div>';
     }
 
     function getCoordinates(city) {
