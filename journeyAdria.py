@@ -19,7 +19,7 @@ def get_token():
     return requests.post('https://login.microsoftonline.com/2cda5d11-f0ac-46b3-967d-af1b2e1bd01a/oauth2/v2.0/token',
                          data=params).json()
 
-def use_token(destination, date, time):
+def use_token(origin, destination, date, time):
     auth = get_token()['access_token']
     headers = {
         'Authorization': f"Bearer {auth}",
@@ -29,7 +29,7 @@ def use_token(destination, date, time):
     }
 
     response = requests.post("https://journey-service-int.api.sbb.ch/v3/trips/by-origin-destination", headers=headers, json={
-        #"origin": origin,
+        "origin": origin,
         "destination": destination,
         "date": date,
         "time": time,
@@ -56,11 +56,11 @@ class Journey:
         self.start = start
         self.end = end
         formatted_date = date.strftime("%Y-%m-%d")
-        self.day = formatted_date
-        self.hour = str(datetime.now().hour) + ":" + str(datetime.now().minute)
+        self.day = str(formatted_date)
+        self.hour = str(date.strftime("%H:%M"))
         self.best_destinations = []
-        for i in range(len(use_token(self.start, self.end, "2023-04-18", "13:07")['trips'])):
-            self.best_destinations.append(use_token(self.start, self.end, "2023-04-18", "13:07")['trips'][i])
+        for i in range(len(use_token(self.start, self.end, self.day, self.hour)['trips'])):
+            self.best_destinations.append(use_token(self.start, self.end, self.day, self.hour)['trips'][i])
             
 
     
@@ -83,3 +83,8 @@ class Journey:
 bubuselo = Journey("8503000","8507000")
 bubuselo.heurizztic()
 
+def coordinates_to_id(lat,long):
+    temp = use_token(self.start, self.end, self.day, self.hour)
+    
+
+print(coordinates_to_station(8.540193, 47.378177))
