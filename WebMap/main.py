@@ -1,5 +1,5 @@
 from API_Request import getStation
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, json
 from API_Request import getCarTrayectGeom, adress_to_coordinates
 from Point import Point
 
@@ -37,6 +37,6 @@ def carTrayectWeb(A,B):
 
 
 if __name__ == "__main__":
-    app.run(host="127.0.0.1", port=8083, debug=True)
+    app.run(host="127.0.0.1", port=8008, debug=True)
 
 

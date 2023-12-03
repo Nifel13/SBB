@@ -13,7 +13,7 @@
     </style>
   </head>
   <body>
-    <p> {{dataStruct[0]}}</p>
+    <p> {{dataStruct[2][4]}}</p>
     <div id = "map"></div>
 
     <script>
@@ -31,9 +31,12 @@
 
       var origin = ['{{dataStruct[0][0]}}', '{{dataStruct[0][1]}}'];
       var destino = ['{{dataStruct[1][0]}}', '{{dataStruct[1][1]}}'];
-      var jsonGeom = '{{dataStruct[2]}}';
+      var jsonGeom = ['{{dataStruct[2]|tojson}}'];
       var inputor ='{{dataStruct[3]}}';
       var inputdest = '{{dataStruct[4]}}';
+
+
+    
 
       var destinationMarker = L.marker(destino).addTo(map);
       destinationMarker.bindPopup(`<b>${inputdest}</b><br>Coordinates: ${destino[0]}, ${destino[1]}`).openPopup();
@@ -42,11 +45,32 @@
       originMarker.bindPopup(`<b>${inputor}</b><br>Coordinates: ${origin[0]}, ${origin[1]}`).openPopup();
         
       
-
+      
       //INTENTO DE SITUAR GEO_JSON:
+      function trajectPlot(){
+        var lonB = jsonGeom[0];
+        var latB = jsonGeom[0];
+        console.log("aefadfadfadfadf");
+        console.log(lonB);
+        for (let step =1; step<jsonGeom.length;step++){
+            lonA=jsonGeom[step][1];
+            latA=jsonGeom[step][1];
+            var polygon = L.polygon([
+                [latA, lonA],
+                [latB, lon],
+                [latA+0.000001,lonA+0.000001],
+                [latB+0.000001,lonB+0.000001]
+            ]).addTo(map);
+            lonB=lonA;
+            latB=latA;
+          }
+      }
+
+      trajectPlot();
 
 
       L.geoJSON(jsonGeom).addTo(map);
+      //L.polygon([jsonGeom[0], jsonGeom[1],[40.00002, 2.000003]]).addTo(map);
       //myLayer.addData(geojson_feature);
       //showMap();
 
