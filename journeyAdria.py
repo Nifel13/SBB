@@ -73,9 +73,27 @@ def coords_parkrail(place, params):
     for i in range(len(params)):
         if str(params[i]['bpuic']) == place['places'][0]['id']:
             return params[i]['geopos']['lon'], params[i]['geopos']['lat']
+
+api_key = '5b3ce3597851110001cf6248dec7b9421134466185935f4d2665a1e0'
         
-def time_per_vehicle(vehicle, coord_start, coord_end):
-    pass
+def time_per_vehicle(coordinates_origin, coordinates_destination, mode, api_key = api_key):
+    # Mode can be 'driving-car' for car or 'foot-walking' for walking
+    url = f"https://api.openrouteservice.org/v2/directions/{mode}?api_key={api_key}&start={coordinates_origin}&end={coordinates_destination}"
+
+    try:
+        response = requests.get(url)
+        response.raise_for_status()
+
+        data = response.json()
+
+        travel_time_seconds = data['features'][0]['properties']['segments'][0]['duration']
+        travel_time_minutes = travel_time_seconds / 60
+
+        return travel_time_minutes
+
+    except requests.exceptions.RequestException as e:
+        print(f"Error in API request: {e}")
+        return None
 
 def place(lon, lat):
     place = use_token_places(lon, lat)
@@ -106,14 +124,15 @@ class Train:
                 best_train[0] = viatge
                 best_train[1] = puntuacio
         print('heuristic points: ',best_train[1], "time:", hour_to_min(best_train[0]), "Transfers: ", len(best_train[0]['legs']))
-        return best_train[0]
+        return best_train[0], hour_to_min(best_train[0])
     
 class Walk:
     def __init__(self, coord_start, coord_end):
         self.coord_start = coord_start
         self.coord_end = coord_end
+        print(self.coord_start, self.coord_end)
     def get_time(self):
-        return time_per_vehicle('walk', self.coord_start, self.coord_end)
+        return time_per_vehicle(self.coord_start, self.coord_end, mode='foot-walking')
 
 class Car:
     def __init__(self, coord_start, coord_end):
@@ -121,7 +140,7 @@ class Car:
         self.coord_end = coord_end
 
     def get_time(self):
-        return time_per_vehicle('car', self.coord_start, self.coord_end)
+        return time_per_vehicle(self.coord_start, self.coord_end, mode='driving-car')
 
     
 class Journey:
@@ -132,12 +151,30 @@ class Journey:
         self.walk2 = walk2
 
     def total_time(self):
-        return 10 + 5 + hour_to_min(self.train.heurizztic()) + 6
-    
+        return self.car.get_time() + self.walk1.get_time() + self.train.heurizztic()[1] + self.walk2.get_time()
+
+def get_travel_time(coordinates_origin, coordinates_destination, api_key, mode):
+    # Mode can be 'driving-car' for car or 'foot-walking' for walking
+    url = f"https://api.openrouteservice.org/v2/directions/{mode}?api_key={api_key}&start={coordinates_origin}&end={coordinates_destination}"
+
+    try:
+        response = requests.get(url)
+        response.raise_for_status()
+
+        data = response.json()
+
+        travel_time_seconds = data['features'][0]['properties']['segments'][0]['duration']
+        travel_time_minutes = travel_time_seconds / 60
+
+        return travel_time_minutes
+
+    except requests.exceptions.RequestException as e:
+        print(f"Error in API request: {e}")
+        return None
 
 if __name__ == '__main__':
     A = [8.544152, 47.411525]
-    B = [6.630315, 46.520677]
+    B = [7.439272,46.947653]
     longitude_a, latitude_a = A
     longitude_b, latitude_b = B
 
@@ -158,11 +195,3 @@ if __name__ == '__main__':
 
     results = Journey(car, walk1, train, walk2)
     print(results.total_time())
-
-'''def coordinates_to_id(lat,long):
-    temp = use_token_serv(self.start, self.end, self.day, self.hour)
-
-bubuselo = Journey("8503000","8507000")
-bubuselo.heurizztic()
-    
-print(coordinates_to_station(8.540193, 47.378177))'''
