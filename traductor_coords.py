@@ -1,5 +1,6 @@
 import requests
 import json
+from geopy.geocoders import Nominatim
 
 API_URL = "https://journey-service-int.api.sbb.ch/"
 CLIENT_SECRET = "MU48Q~IuD6Iawz3QfvkmMiKHtfXBf-ffKoKTJdt5"
@@ -36,6 +37,23 @@ def use_token(longitude, latitude):
 
 def trans_coords(longitude, latitude):
     return use_token(longitude, latitude)["places"][0]["id"]
+
+
+def get_coordinates(location):
+    # Create a geocoder using Nominatim
+    geolocator = Nominatim(user_agent="my_geocoder")
+
+    # Use the geocoder to get the location coordinates
+    location_data = geolocator.geocode(location)
+
+    if location_data:
+        # Extract latitude and longitude
+        latitude, longitude = location_data.latitude, location_data.longitude
+        return latitude, longitude
+    else:
+        print("Location not found.")
+        return None
+
 
 
 

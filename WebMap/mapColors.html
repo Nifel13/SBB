@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <style>
+        #map {
+            height: 500px;
+        }
+        .legend {
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.8);
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            border-radius: 5px;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 1000;
+        }
+    </style>
+    <title>Route Calculator</title>
+</head>
+<body>
+
+<h1>Route Calculator</h1>
+
+<!-- Input fields for each leg of the journey -->
+<p>Car:</p>
+<p>Enter car origin:</p>
+<input type="text" id="carOrigin" placeholder="Enter car origin">
+
+<p>Enter car destination:</p>
+<input type="text" id="carDestination" placeholder="Enter car destination">
+
+<p>Walk1:</p>
+<p>Enter walk1 origin:</p>
+<input type="text" id="walk1Origin" placeholder="Enter walk1 origin (optional, default to car destination if not specified)">
+
+<p>Enter walk1 destination:</p>
+<input type="text" id="walk1Destination" placeholder="Enter walk1 destination (optional, default to car destination if not specified)">
+
+<!-- Add similar input fields for train and walk2 -->
+
+<button onclick="showMap()">Show Map</button>
+
+<div id="map"></div>
+<div class="legend" id="legend"></div>
+
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script>
+    var map;
+
+    function showMap() {
+        // Get values from input fields
+        var carOrigin = document.getElementById('carOrigin').value;
+        var carDestination = document.getElementById('carDestination').value;
+        var walk1Origin = document.getElementById('walk1Origin').value;
+        var walk1Destination = document.getElementById('walk1Destination').value;
+
+        // Create a list of tuples for each leg of the journey
+        var listOfTuples = [
+            [getCoordinates(carOrigin), getCoordinates(carDestination)],
+            [getCoordinates(walk1Origin), getCoordinates(walk1Destination)],
+            // Add more tuples for train, walk2 as needed
+        ];
+
+        // Filter out tuples with undefined origins or destinations
+        var filteredList = listOfTuples.filter(tuple => tuple[0] !== undefined && tuple[1] !== undefined);
+
+        if (filteredList.length === 0) {
+            alert('Please provide at least one valid leg of the journey.');
+            return;
+        }
+
+        if (map) {
+            map.remove(); // Remove existing map if any
+        }
+
+        map = L.map('map').setView([46.8182, 8.2275], 8); // Set the default center and zoom level for Switzerland
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        // Add markers for each origin and destination
+        for (var i = 0; i < filteredList.length; i++) {
+            var origin = filteredList[i][0];
+            var destination = filteredList[i][1];
+
+            var originMarker = L.marker(origin).addTo(map);
+            originMarker.bindPopup(`<b>Leg ${i + 1} Origin</b><br>Coordinates: ${origin[0]}, ${origin[1]}`).openPopup();
+
+            var destinationMarker = L.marker(destination).addTo(map);
+            destinationMarker.bindPopup(`<b>Leg ${i + 1} Destination</b><br>Coordinates: ${destination[0]}, ${destination[1]}`).openPopup();
+
+            // Draw line for each leg of the journey
+            var line = L.polyline([origin, destination], { color: 'red' }).addTo(map);
+        }
+
+        // Add legend
+        addLegend();
+    }
+
+    function addLegend() {
+        var legend = document.getElementById('legend');
+        legend.innerHTML = '<h3>Legend</h3>';
+        legend.innerHTML += '<div><span style="color: red;">Journey</span></div>';
+    }
+
+    function getCoordinates(city) {
+        // You provided the coordinates for several cities
+        var cityCoordinates = {
+            'Zurich': [47.3769, 8.5417],
+            'Geneva': [46.2044, 6.1432],
+            'Basel': [47.5584, 7.5733],
+            'Lausanne': [46.5191, 6.6336],
+            'Bern': [46.9480, 7.4474],
+            'Winterthur': [47.5001, 8.7254],
+            'Lucerne': [47.0502, 8.3093],
+            'St. Gallen': [47.4235, 9.3749],
+            'Lugano': [46.0037, 8.9511],
+            'Biel/Bienne': [47.1410, 7.2576],
+            'Thun': [46.7512, 7.6218],
+            'Köniz': [46.9249, 7.4149],
+            'La Chaux-de-Fonds': [47.0994, 6.8253],
+            'Fribourg': [46.8065, 7.1617],
+            'Schaffhausen': [47.6976, 8.6349],
+            'Chur': [46.8521, 9.5297],
+            'Vernier': [46.2170, 6.0849],
+            'Neuchâtel': [46.9931, 6.9298],
+            'Uster': [47.3470, 8.7207],
+            'Sion': [46.2333, 7.3500],
+            'Luzern': [47.0502, 8.3093],
+            'Zug': [47.1724, 8.5177],
+            'Rapperswil-Jona': [47.2264, 8.8177],
+            'Montreux': [46.4312, 6.9107],
+            'Frauenfeld': [47.5584, 8.8981],
+            'Dietikon': [47.4017, 8.4000],
+            'Baar': [47.1964, 8.5299]
+        };
+
+        // Return coordinates for the given city
+        return cityCoordinates[city];
+    }
+</script>
+
+</body>
+</html>
