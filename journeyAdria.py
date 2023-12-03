@@ -130,17 +130,28 @@ class Walk:
     def __init__(self, coord_start, coord_end):
         self.coord_start = coord_start
         self.coord_end = coord_end
-        print(self.coord_start, self.coord_end)
+
+    def get_string(self):
+        coords_str1 = '{},{}'.format(self.coord_start[1], self.coord_start[0])
+        coords_str2 = '{},{}'.format(self.coord_end[1], self.coord_end[0])
+        return coords_str1, coords_str2
+    
     def get_time(self):
-        return time_per_vehicle(self.coord_start, self.coord_end, mode='foot-walking')
+        print(self.get_string())
+        return time_per_vehicle(self.get_string()[0], self.get_string()[1], mode='foot-walking')
 
 class Car:
     def __init__(self, coord_start, coord_end):
         self.coord_start = coord_start
         self.coord_end = coord_end
 
+    def get_string(self):
+        coords_str1 = '{},{}'.format(self.coord_start[1], self.coord_start[0])
+        coords_str2 = '{},{}'.format(self.coord_end[1], self.coord_end[0])
+        return coords_str1, coords_str2
+    
     def get_time(self):
-        return time_per_vehicle(self.coord_start, self.coord_end, mode='driving-car')
+        return time_per_vehicle(self.get_string()[0], self.get_string()[1], mode='driving-car')
 
     
 class Journey:
@@ -152,25 +163,6 @@ class Journey:
 
     def total_time(self):
         return self.car.get_time() + self.walk1.get_time() + self.train.heurizztic()[1] + self.walk2.get_time()
-
-def get_travel_time(coordinates_origin, coordinates_destination, api_key, mode):
-    # Mode can be 'driving-car' for car or 'foot-walking' for walking
-    url = f"https://api.openrouteservice.org/v2/directions/{mode}?api_key={api_key}&start={coordinates_origin}&end={coordinates_destination}"
-
-    try:
-        response = requests.get(url)
-        response.raise_for_status()
-
-        data = response.json()
-
-        travel_time_seconds = data['features'][0]['properties']['segments'][0]['duration']
-        travel_time_minutes = travel_time_seconds / 60
-
-        return travel_time_minutes
-
-    except requests.exceptions.RequestException as e:
-        print(f"Error in API request: {e}")
-        return None
 
 if __name__ == '__main__':
     A = [8.544152, 47.411525]
