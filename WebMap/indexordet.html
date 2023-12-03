@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <style>
         #map {
             height: 500px;
@@ -25,7 +25,8 @@
 
 <div id="map"></div>
 
-<script src="leaflet.js"></script>
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.js"></script>
 <script>
     var map;
 
@@ -63,8 +64,8 @@
         var destinationMarker = L.marker(destinationCoordinates).addTo(map);
         destinationMarker.bindPopup(`<b>${destinationInput}</b><br>Coordinates: ${destinationCoordinates[0]}, ${destinationCoordinates[1]}`).openPopup();
 
-        // Add a polyline (straight line) between origin and destination
-        var polyline = L.polyline([originCoordinates, destinationCoordinates], {color: 'blue'}).addTo(map);
+        // Add the route
+        calculateRoute(originCoordinates, destinationCoordinates);
     }
 
     function getCityCoordinates(city) {
@@ -78,6 +79,19 @@
         };
 
         return cityCoordinates[city];
+    }
+
+    function calculateRoute(origin, destination) {
+        var routeControl = L.Routing.control({
+            waypoints: [
+                L.latLng(origin),
+                L.latLng(destination)
+            ],
+            routeWhileDragging: true,
+            router: L.Routing.openRouteService({
+                api_key: '5b3ce3597851110001cf6248dec7b9421134466185935f4d2665a1e0',
+            })
+        }).addTo(map);
     }
 </script>
 
