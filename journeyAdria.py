@@ -74,17 +74,14 @@ class Journey:
             if puntuacio < best_train[1]:
                 best_train[0] = viatge
                 best_train[1] = puntuacio
-        print('heuristic points: ',best_train[1], "time:" ,hour_to_min(best_train[0]), "Transfers: ", len(best_train[0]['legs']))
+        print('heuristic points: ',best_train[1], "time(min):" ,hour_to_min(best_train[0]), "Transfers: ", len(best_train[0]['legs']))
         return best_train[0]
         
-    
 
 
 bubuselo = Journey("8503000","8507000")
 bubuselo.heurizztic()
 
-def coordinates_to_id(lat,long):
-    temp = use_token(self.start, self.end, self.day, self.hour)
+
     
 
-print(coordinates_to_station(8.540193, 47.378177))
