@@ -93,8 +93,8 @@ class Train:
         self.day = str(formatted_date)
         self.hour = str(date.strftime("%H:%M"))
         self.best_destinations = []
-        for i in range(len(use_token_serv(self.start, self.end, self.day, self.hour)['trips'])):
-            self.best_destinations.append(use_token_serv(self.start, self.end, self.day, self.hour)['trips'][i])
+        for i in range(len(use_token_serv(self.start, self.end, "2023-04-18", "13:07")['trips'])):
+            self.best_destinations.append(use_token_serv(self.start, self.end, "2023-04-18", "13:07")['trips'][i])
 
     def heurizztic(self):
         best_train = [None,999999999]
@@ -132,12 +132,12 @@ class Journey:
         self.walk2 = walk2
 
     def total_time(self):
-        return self.car.get_time() + self.walk1.get_time() + hour_to_min(self.train.heurizztic()) + self.walk2.get_time()
+        return 10 + 5 + hour_to_min(self.train.heurizztic()) + 6
     
 
 if __name__ == '__main__':
     A = [8.544152, 47.411525]
-    B = A
+    B = [6.630315, 46.520677]
     longitude_a, latitude_a = A
     longitude_b, latitude_b = B
 
