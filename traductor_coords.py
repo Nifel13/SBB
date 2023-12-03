@@ -34,16 +34,8 @@ def use_token(longitude, latitude):
 
     return response
 
+def trans_coords(longitude, latitude):
+    return use_token(longitude, latitude)["places"][0]["id"]
 
-test = use_token(8.5441, 47.4115)
-print(test["places"][0]["id"])
 
-def read_params_from_json():
-    with open('park_rail.json', 'r') as f:
-        params = json.load(f)
-    return params
 
-params = read_params_from_json()
-
-for i in range(params['total_count']):
-    pass
