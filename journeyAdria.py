@@ -149,6 +149,9 @@ class Journey:
         self.walk1 = walk1
         self.train = train
         self.walk2 = walk2
+    
+    def coord_list(self):
+        return [self.walk1.coord_start, self.walk1.coord_end,self.car.coord_start, self.car.coord_end, self.walk2.coord_start, self.walk2.coord_end]
 
     def total_time(self):
         return self.car.get_time() + self.walk1.get_time() + self.train.heurizztic()[1] + self.walk2.get_time()
@@ -194,4 +197,4 @@ if __name__ == '__main__':
     walk2 = Walk(coords_place_b, B)
 
     results = Journey(car, walk1, train, walk2)
-    print(results.total_time())
+    print(results.coord_list())
