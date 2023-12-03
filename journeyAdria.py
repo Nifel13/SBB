@@ -111,8 +111,8 @@ class Train:
         self.day = str(formatted_date)
         self.hour = str(date.strftime("%H:%M"))
         self.best_destinations = []
-        for i in range(len(use_token_serv(self.start, self.end, "2023-04-18", "13:07")['trips'])):
-            self.best_destinations.append(use_token_serv(self.start, self.end, "2023-04-18", "13:07")['trips'][i])
+        for i in range(len(use_token_serv(self.start, self.end, self.day, self.hour)['trips'])):
+            self.best_destinations.append(use_token_serv(self.start, self.end, self.day, self.hour)['trips'][i])
 
     def heurizztic(self):
         best_train = [None,999999999]
@@ -123,7 +123,6 @@ class Train:
             if puntuacio < best_train[1]:
                 best_train[0] = viatge
                 best_train[1] = puntuacio
-        print('heuristic points: ',best_train[1], "time:", hour_to_min(best_train[0]), "Transfers: ", len(best_train[0]['legs']))
         return best_train[0], hour_to_min(best_train[0])
     
 class Walk:
@@ -132,12 +131,11 @@ class Walk:
         self.coord_end = coord_end
 
     def get_string(self):
-        coords_str1 = '{},{}'.format(self.coord_start[1], self.coord_start[0])
-        coords_str2 = '{},{}'.format(self.coord_end[1], self.coord_end[0])
+        coords_str1 = '{:.6f},{:.6f}'.format(self.coord_start[0], self.coord_start[1])
+        coords_str2 = '{},{}'.format(self.coord_end[0], self.coord_end[1])
         return coords_str1, coords_str2
     
     def get_time(self):
-        print(self.get_string())
         return time_per_vehicle(self.get_string()[0], self.get_string()[1], mode='foot-walking')
 
 class Car:
@@ -146,8 +144,8 @@ class Car:
         self.coord_end = coord_end
 
     def get_string(self):
-        coords_str1 = '{},{}'.format(self.coord_start[1], self.coord_start[0])
-        coords_str2 = '{},{}'.format(self.coord_end[1], self.coord_end[0])
+        coords_str1 = '{},{}'.format(self.coord_start[0], self.coord_start[1])
+        coords_str2 = '{},{}'.format(self.coord_end[0], self.coord_end[1])
         return coords_str1, coords_str2
     
     def get_time(self):
@@ -160,9 +158,6 @@ class Journey:
         self.walk1 = walk1
         self.train = train
         self.walk2 = walk2
-    
-    def coord_list(self):
-        return [self.walk1.coord_start, self.walk1.coord_end,self.car.coord_start, self.car.coord_end, self.walk2.coord_start, self.walk2.coord_end]
 
     def total_time(self):
         return self.car.get_time() + self.walk1.get_time() + self.train.heurizztic()[1] + self.walk2.get_time()
